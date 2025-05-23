@@ -252,6 +252,116 @@
 					<h2 class="section-header-headline typography-section-headline" data-staggered-anchor="" data-staggered-before-item="" style="">Timeline of US Colonialism in Puerto Rico</h2>
 				</header>
 			</div>
+            <!-- Timeline Scroll Buttons for Accessibility -->
+            <style>
+            .timeline-scroll-buttons {
+                display: flex;
+                justify-content: left;
+                align-items: center;
+                padding-left: 70%;
+                gap: 18px;
+                margin: 18px 0 16px 0;
+            }
+            .timeline-scroll-btn {
+                background: #222;
+                color: #fff;
+                border: none;
+                border-radius: 6px;
+                padding: 10px 22px;
+                font-size: 1.08rem;
+                cursor: pointer;
+                transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+                box-shadow: 0 2px 8px rgba(60,60,60,0.08);
+                outline: none;
+            }
+            .timeline-scroll-btn:active,
+            .timeline-scroll-btn:focus {
+                background: #444;
+                color: #fff;
+                box-shadow: 0 2px 16px rgba(60,60,60,0.13);
+            }
+            .timeline-scroll-btn[disabled] {
+                background: #bbb;
+                color: #eee;
+                cursor: not-allowed;
+            }
+            </style>
+            <p style="display: flex;
+                justify-content: left; 
+                padding-left: 70%;
+                font: 400 14px/20px -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;">If you're on mouse and keyboard</p>
+            <div class="timeline-scroll-buttons" aria-label="Scroll timeline">
+                <button class="timeline-scroll-btn" id="timeline-scroll-left" aria-label="Scroll timeline left" type="button">&larr; Scroll Left</button>
+                <button class="timeline-scroll-btn" id="timeline-scroll-right" aria-label="Scroll timeline right" type="button">Scroll Right &rarr;</button>
+            </div>
+            <script>
+            (function() {
+                function getContainer() {
+                    return document.querySelector('#scroll-gallery-feature-cards .scroll-container');
+                }
+                const leftBtn = document.getElementById('timeline-scroll-left');
+                const rightBtn = document.getElementById('timeline-scroll-right');
+                let container = null;
+                const SCROLL_AMOUNT = 1000; // px per click
+
+                function updateButtons() {
+                    container = getContainer();
+                    if (!container) {
+                        leftBtn.disabled = true;
+                        rightBtn.disabled = true;
+                        return;
+                    }
+                    leftBtn.disabled = container.scrollLeft <= 10;
+                    rightBtn.disabled = container.scrollLeft + container.clientWidth >= container.scrollWidth - 10;
+                }
+
+                // Custom smooth scroll with slower animation
+                function animateScrollBy(amount) {
+                    container = getContainer();
+                    if (!container) return;
+                    const start = container.scrollLeft;
+                    const end = start + amount;
+                    const duration = 1500; // ms, increase for slower scroll
+                    const startTime = performance.now();
+
+                    function step(now) {
+                        const elapsed = now - startTime;
+                        const t = Math.min(elapsed / duration, 1);
+                        // easeInOutQuad
+                        const ease = t < 0.5 ? 2*t*t : -1+(4-2*t)*t;
+                        container.scrollLeft = start + (end - start) * ease;
+                        if (t < 1) {
+                            requestAnimationFrame(step);
+                        }
+                    }
+                    requestAnimationFrame(step);
+                }
+
+                function scrollLeft() {
+                    animateScrollBy(-SCROLL_AMOUNT);
+                }
+                function scrollRight() {
+                    animateScrollBy(SCROLL_AMOUNT);
+                }
+
+                leftBtn.addEventListener('click', scrollLeft);
+                rightBtn.addEventListener('click', scrollRight);
+
+                // Wait for DOM and timeline to be ready
+                function setup() {
+                    container = getContainer();
+                    if (container) {
+                        container.addEventListener('scroll', updateButtons, {passive:true});
+                        window.addEventListener('resize', updateButtons);
+                        updateButtons();
+                    } else {
+                        setTimeout(setup, 200);
+                    }
+                }
+                setup();
+            })();
+            </script>
+            </script>
 			<div class="consider-container v0 staggered-end" data-component-list="StaggeredFadeIn">
 				<div id="scroll-gallery-feature-cards" data-scroll-gallery-feature-cards="" data-scroll-gallery="" data-analytics-gallery-id="get to know iphone gallery" aria-label="Get to know iPhone gallery" class="gallery gallery-align-start gallery-feature-cards" data-component-list="ScrollGallery" style="--scroll-bar-width: 15px;">
 					<div class="scroll-container" style="scroll-snap-type: x mandatory;">
@@ -598,6 +708,94 @@
 				</header>
 				<h3 style="transform: translateY(-80px);">& Written Portion</h3>
 			</div>
+            <!-- Scroll Button for Academic Frameworks Paragraphs -->
+            <style>
+            .framework-scroll-buttons {
+                display: flex;
+                justify-content: flex-end;
+                align-items: center;
+                gap: 14px;
+                margin: 12px 0 18px 0;
+                padding-right: 2.5em;
+            }
+            .framework-scroll-btn {
+                background: #222;
+                color: #fff;
+                border: none;
+                border-radius: 6px;
+                padding: 8px 20px;
+                font-size: 1rem;
+                cursor: pointer;
+                transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+                box-shadow: 0 2px 8px rgba(60,60,60,0.08);
+                outline: none;
+            }
+            .framework-scroll-btn:active,
+            .framework-scroll-btn:focus {
+                background: #444;
+                color: #fff;
+                box-shadow: 0 2px 16px rgba(60,60,60,0.13);
+            }
+            .framework-scroll-btn[disabled] {
+                background: #bbb;
+                color: #eee;
+                cursor: not-allowed;
+            }
+            </style>
+            <div class="framework-scroll-buttons" aria-label="Scroll academic frameworks">
+                <button class="framework-scroll-btn" id="framework-scroll-left" aria-label="Scroll left" type="button">&larr; Prev Section</button>
+                <button class="framework-scroll-btn" id="framework-scroll-right" aria-label="Scroll right" type="button">Next Section&rarr;</button>
+            </div>
+            <script>
+            (function() {
+                // Find the scrollable container for the academic frameworks section
+                function getFrameworkContainer() {
+                    return document.querySelector('#scroll-gallery-gallery-1 .scroll-container');
+                }
+                const leftBtn = document.getElementById('framework-scroll-left');
+                const rightBtn = document.getElementById('framework-scroll-right');
+                let container = null;
+                const SCROLL_AMOUNT = 1000; // px per click, adjust as needed
+
+                function updateFrameworkButtons() {
+                    container = getFrameworkContainer();
+                    if (!container) {
+                        leftBtn.disabled = true;
+                        rightBtn.disabled = true;
+                        return;
+                    }
+                    leftBtn.disabled = container.scrollLeft <= 10;
+                    rightBtn.disabled = container.scrollLeft + container.clientWidth >= container.scrollWidth - 10;
+                }
+
+                function scrollFrameworkLeft() {
+                    container = getFrameworkContainer();
+                    if (!container) return;
+                    container.scrollBy({left: -SCROLL_AMOUNT, behavior: 'smooth'});
+                }
+                function scrollFrameworkRight() {
+                    container = getFrameworkContainer();
+                    if (!container) return;
+                    container.scrollBy({left: SCROLL_AMOUNT, behavior: 'smooth'});
+                }
+
+                leftBtn.addEventListener('click', scrollFrameworkLeft);
+                rightBtn.addEventListener('click', scrollFrameworkRight);
+
+                // Wait for DOM and gallery to be ready
+                function setupFrameworkScroll() {
+                    container = getFrameworkContainer();
+                    if (container) {
+                        container.addEventListener('scroll', updateFrameworkButtons, {passive:true});
+                        window.addEventListener('resize', updateFrameworkButtons);
+                        updateFrameworkButtons();
+                    } else {
+                        setTimeout(setupFrameworkScroll, 200);
+                    }
+                }
+                setupFrameworkScroll();
+            })();
+            </script>
 				<div class="galleries-container" data-select-gallery-container="" data-staggered-before-item="" style="--select-gallery-height: 102px;">
 					<style>
 						.select-gallery-flex {
@@ -682,7 +880,7 @@
 							<ul id="quote-sidebar" style="list-style:none;padding:0;margin:0;">
 							<aside class="epigraph-sidebar">
 							<div class="epigraph-sidebar-content">
-								<p>Scroll right for the next paragraph ➔</p>
+								<p>Scroll right for the next paragraph on laptop ➔</p>
 								<br>
 								<span class="epigraph-arrow"> </span>
 								<blockquote>
@@ -708,7 +906,7 @@
 						<div class="scroll-container">
 							<div class="item-container">
 								<ul class="product-tile-set" data-component-list="ProductTileEqualizer">
-									<li style="width: 10in; margin-right: 5in" class="product-tile product-tile-iphone-16-pro has-image-link-row has-swatches-row has-headline-row has-plus-rows-5 gallery-item grid-item current" aria-label="iPhone 16 Pro" data-grid-column="" data-analytics-gallery-item-id="iphone 16 pro" id="gallery-item-0" data-ac-gallery-item="gallery-item-0" data-staggered-item="" data-staggered-children="" style="--badge-height: 0px;--headline-height: 28px;--subheading-height: 0px;">
+									<li style="width: 10in; margin-right: 10in" class="product-tile product-tile-iphone-16-pro has-image-link-row has-swatches-row has-headline-row has-plus-rows-5 gallery-item grid-item current" aria-label="iPhone 16 Pro" data-grid-column="" data-analytics-gallery-item-id="iphone 16 pro" id="gallery-item-0" data-ac-gallery-item="gallery-item-0" data-staggered-item="" data-staggered-children="" style="--badge-height: 0px;--headline-height: 28px;--subheading-height: 0px;">
 												<p class="product-tile-positioning product-tile-padding" style="">Angela Davis</p>
 												<p class="product-tile-price product-tile-padding has-dynamic-content" style=""><span class="sosumi-link-follows" data-pricing-product="iphone-16-pro" data-product-template="${price.display.from}" data-acmi-idx="3" data-display-style="" data-pricing-loaded="">Social Reproduction
 												</span><span data-toggle="acmi" class="has-dynamic-content"><span class="sosumi-link-follows" data-pricing-product="iphone-16-pro" data-product-template=" or ${price.display.perMonth} for ${price.display.months} mo." data-acmi-idx="4" data-display-style="" data-pricing-loaded=""></span></span>
@@ -726,7 +924,7 @@
 													</div>
 												</div>
 											</li>
-											<li style="width: 10in; margin-right: 5in" class="product-tile product-tile-iphone-16-pro has-image-link-row has-swatches-row has-headline-row has-plus-rows-5 gallery-item grid-item current" aria-label="iPhone 16 Pro" data-grid-column="" data-analytics-gallery-item-id="iphone 16 pro" id="gallery-item-0" data-ac-gallery-item="gallery-item-0" data-staggered-item="" data-staggered-children="" style="--badge-height: 0px;--headline-height: 28px;--subheading-height: 0px;">
+											<li style="width: 10in; margin-right: 10in" class="product-tile product-tile-iphone-16-pro has-image-link-row has-swatches-row has-headline-row has-plus-rows-5 gallery-item grid-item current" aria-label="iPhone 16 Pro" data-grid-column="" data-analytics-gallery-item-id="iphone 16 pro" id="gallery-item-0" data-ac-gallery-item="gallery-item-0" data-staggered-item="" data-staggered-children="" style="--badge-height: 0px;--headline-height: 28px;--subheading-height: 0px;">
 												<p class="product-tile-positioning product-tile-padding" style="">Silvia Federici</p>
 												<p class="product-tile-price product-tile-padding has-dynamic-content" style=""><span class="sosumi-link-follows" data-pricing-product="iphone-16-pro" data-product-template="${price.display.from}" data-acmi-idx="3" data-display-style="" data-pricing-loaded="">Primitive Accumulation
 												</span><span data-toggle="acmi" class="has-dynamic-content"><span class="sosumi-link-follows" data-pricing-product="iphone-16-pro" data-product-template=" or ${price.display.perMonth} for ${price.display.months} mo." data-acmi-idx="4" data-display-style="" data-pricing-loaded=""></span></span>
@@ -744,7 +942,7 @@ This logic carried forward in time and society, while (and well after) colonial 
 													</div>
 												</div>
 											</li>
-											<li style="width: 8in; margin-right: 20in" class="product-tile product-tile-iphone-16-pro has-image-link-row has-swatches-row has-headline-row has-plus-rows-5 gallery-item grid-item current" aria-label="iPhone 16 Pro" data-grid-column="" data-analytics-gallery-item-id="iphone 16 pro" id="gallery-item-0" data-ac-gallery-item="gallery-item-0" data-staggered-item="" data-staggered-children="" style="--badge-height: 0px;--headline-height: 28px;--subheading-height: 0px;">
+											<li style="width: 8in; padding-right: 2in" class="product-tile product-tile-iphone-16-pro has-image-link-row has-swatches-row has-headline-row has-plus-rows-5 gallery-item grid-item current" aria-label="iPhone 16 Pro" data-grid-column="" data-analytics-gallery-item-id="iphone 16 pro" id="gallery-item-0" data-ac-gallery-item="gallery-item-0" data-staggered-item="" data-staggered-children="" style="--badge-height: 0px;--headline-height: 28px;--subheading-height: 0px;">
 												<p class="product-tile-positioning product-tile-padding" style="">Kimberlé Crenshaw</p>
 												<p class="product-tile-price product-tile-padding has-dynamic-content" style=""><span class="sosumi-link-follows" data-pricing-product="iphone-16-pro" data-product-template="${price.display.from}" data-acmi-idx="3" data-display-style="" data-pricing-loaded="">Intersectionality and Resistance
 												</span><span data-toggle="acmi" class="has-dynamic-content"><span class="sosumi-link-follows" data-pricing-product="iphone-16-pro" data-product-template=" or ${price.display.perMonth} for ${price.display.months} mo." data-acmi-idx="4" data-display-style="" data-pricing-loaded=""></span></span>
@@ -753,7 +951,7 @@ This logic carried forward in time and society, while (and well after) colonial 
 													<div class="product-tile-plus-cell product-tile-plus-1" data-grid-row-1="">
 														<div>
 															<hr width="100%" size="2">
-															<p><br>Kimberlé Crenshaw’s concept of intersectionality helps explain why Puerto Rican women have been disproportionately affected by U.S. colonial policies. Crenshaw argues that when systems of power ignore overlapping identities, people at the margins fall through the cracks. She states, “If you're standing in the path of multiple forms of exclusion, you're likely to get hit by both.” This is exactly what happened in Puerto Rico, where women were not only targeted by population control efforts like mass sterilization but also faced racialized economic exploitation. These women were subjects of both gendered and colonial control. As Crenshaw says, “If we can't see a problem, we can't fix it.” Analysing Puerto Rican reproductive injustice includeds looking at how racism, sexism, and colonialism can all collectively affect real people who happen to be born into certain groupings, and this is often ignored or even simply sympathized with rather than actually approached.</p>
+															<p><br>Kimberlé Crenshaw’s concept of intersectionality helps explain why Puerto Rican women have been disproportionately affected by U.S. colonial policies. Crenshaw argues that when systems of power ignore overlapping identities, people at the margins fall through the cracks. She states, “If you're standing in the path of multiple forms of exclusion, you're likely to get hit by both.” This is exactly what happened in Puerto Rico, where women were not only targeted by population control efforts like mass sterilization but also faced racialized economic exploitation. These women were subjects of both gendered and colonial control. As Crenshaw says, “If we can't see a problem, we can't fix it.” Analysing Puerto Rican reproductive injustice includeds looking at how racism, sexism, and colonialism can all collectively affect real people who happen to be born into certain groupings, and this is often ignored or even simply sympathized with rather than actually approached. This insight, to me, sums up the purpose or perspective of making this project. Although Puerto Rican history may seem non-relenvant or as a secondary issue to some, the importacnce, pride, and issues that are seen in the story and more importantly the people who live it are just as important as any other perspective.</p>
 
 														</div>
 													</div>
